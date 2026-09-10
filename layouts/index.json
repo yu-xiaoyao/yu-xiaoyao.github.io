@@ -1,0 +1,10 @@
+{{- /* 覆盖主题的 layouts/index.json：只索引指定 section 下的页面。
+       可通过 params.searchSections 配置，默认只索引 posts。 */ -}}
+{{- $sections := site.Params.searchSections | default (slice "posts") -}}
+{{- $index := slice -}}
+{{- range where site.RegularPages "Section" "in" $sections -}}
+    {{- if and (not .Params.searchHidden) (ne .Layout `archives`) (ne .Layout `search`) -}}
+        {{- $index = $index | append (dict "title" .Title "content" .Plain "permalink" .Permalink "summary" .Summary) -}}
+    {{- end -}}
+{{- end -}}
+{{- $index | jsonify -}}

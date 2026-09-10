@@ -1,0 +1,80 @@
+baseURL = 'https://yu-xiaoyao.github.io/'
+title = 'YuXiaoyao'
+theme = 'PaperMod'
+paginate =  5
+
+# 内容语言：决定 <html lang>、:date_long 的本地化以及 RSS/sitemap 的语言标记
+defaultContentLanguage = 'zh-CN'
+languageCode = 'zh-CN'
+
+[languages.zh-CN]
+    locale = 'zh-CN'
+    weight = 1
+
+# 搜索依赖首页输出的 index.json
+[outputs]
+    home = ['HTML', 'RSS', 'JSON']
+
+
+[params]
+
+    # 文章日期显示格式，Go 时间布局串
+    DateFormat = '2006-01-02'
+
+    # 只把这些 section 下的页面加入搜索索引
+    searchSections = ['posts']
+
+    # Fuse.js 检索参数，键名小写对应 fastsearch.js 中的 params.fuseOpts
+    [params.fuseOpts]
+        iscasesensitive = false
+        includescore = false
+        includematches = false
+        minmatchcharlength = 1
+        shouldsort = true
+        findallmatches = false
+        keys = ['title', 'permalink', 'summary', 'content']
+        location = 0
+        threshold = 0.4
+        distance = 100
+        ignorelocation = true
+        limit = 10
+
+
+[menu]
+
+    [[menu.main]]
+        identifier = 'home'
+        name = '主页'
+        url = '/'
+        weight = 1
+
+    [[menu.main]]
+        identifier = 'search'
+        name = '搜索'
+        url = '/search/'
+        weight = 2
+
+    [[menu.main]]
+        identifier = 'categories'
+        name = '类别'
+        url = '/categories/'
+        weight = 10
+
+    [[menu.main]]
+        identifier = 'tags'
+        name = '标签'
+        url = '/tags/'
+        weight = 20
+
+
+    [[menu.main]]
+        identifier = 'archives'
+        name = '归档'
+        url = '/archives/'
+        weight = 30
+
+    [[menu.main]]
+        identifier = 'about'
+        name = '关于'
+        url = '/about/'
+        weight = 40

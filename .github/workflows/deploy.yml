@@ -1,0 +1,49 @@
+name: Deploy Hugo site to gh-pages
+
+on:
+  push:
+    branches: [main]
+  # 允许在 Actions 页面手动触发一次部署
+  workflow_dispatch:
+
+# GITHUB_TOKEN 需要写权限才能把产物推到 gh-pages 分支
+permissions:
+  contents: write
+
+# 同一分支上只保留最新一次部署，旧任务自动取消
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          # PaperMod 是 submodule，必须一起拉取，否则构建时报 theme 不存在
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v3
+        with:
+          # PaperMod 要求 >= 0.146.0，且需要 extended 版本（SCSS 编译）
+          hugo-version: '0.164.0'
+          extended: true
+
+      - name: Build
+        run: hugo --minify --gc
+
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
+          publish_branch: gh-pages
+          # 每次都是全新的孤儿提交 + 强推，gh-pages 上不留任何历史记录
+          force_orphan: true
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: 'deploy: ${{ github.event.head_commit.message }}'
