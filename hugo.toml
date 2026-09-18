@@ -7,6 +7,8 @@ paginate =  5
 defaultContentLanguage = 'zh-CN'
 languageCode = 'zh-CN'
 
+enableRobotsTXT = true
+
 [languages.zh-CN]
     locale = 'zh-CN'
     weight = 1
